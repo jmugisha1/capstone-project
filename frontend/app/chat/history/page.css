@@ -1,0 +1,79 @@
+.chat-history {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+  padding: 32px 160px;
+  border-radius: 8px;
+  border: 0.55px solid rgb(0, 0, 0, 0.15);
+
+  .chat-history-header {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    .chat-history-header-title {
+      font-size: 32px;
+      text-transform: capitalize;
+    }
+
+    .chat-history-header-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .chatbot-history-wrapper-main-subheader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+
+    .chatbot-history-wrapper-main-subheader-par {
+      font-size: 16px;
+      color: rgb(0, 0, 0, 0.5);
+      text-transform: capitalize;
+    }
+
+    .chatbot-history-wrapper-main-subheader-link {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      background-color: black;
+      padding: 8px;
+      border-radius: 4px;
+
+      .chatbot-history-wrapper-main-subheader-link-icon {
+        width: 16px;
+        filter: brightness(0) saturate(100%) invert(100%) sepia(6%) saturate(6%)
+          hue-rotate(9deg) brightness(106%) contrast(100%);
+        height: 16px;
+      }
+      .chatbot-history-wrapper-main-subheader-link-span {
+        font-size: 14px;
+        color: white;
+        text-transform: capitalize;
+      }
+    }
+  }
+
+  .chatbot-history-main-search {
+    border: 1px solid black;
+    padding: 16px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+
+    .chatbot-history-main-search-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

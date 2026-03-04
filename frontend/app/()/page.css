@@ -1,0 +1,19 @@
+.home-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 12px;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #f0eee6;
+
+  .home-wrapper-main {
+    display: flex;
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+}
