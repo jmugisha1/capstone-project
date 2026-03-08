@@ -1,7 +1,7 @@
 "use client";
-import { AuthPage } from "../../components/auth-component/auth-page";
+import { AuthPage } from "../_components/auth-page";
 import { useRouter, useSearchParams } from "next/navigation";
-import { verifyEmail } from "../../components/auth-component/auth-config";
+import { verifyEmail } from "../_config/auth-config";
 
 export default function VerifyAccountPage() {
   const router = useRouter();
