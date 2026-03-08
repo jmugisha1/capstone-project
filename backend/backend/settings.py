@@ -18,13 +18,13 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://capstone-project-nine-woad.vercel.app",  # ← moved here, added https://
+    "https://mkkarekezi-capstone-project.vercel.app"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://capstone-project-nine-woad.vercel.app",  # ← fixed broken string
+    "https://mkkarekezi-capstone-project.vercel.app",
     "https://capstone-project-f5nm.onrender.com",
 ]
 
