@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  turbopack: false,
+  turbopack: {},
 };
 export default nextConfig;
