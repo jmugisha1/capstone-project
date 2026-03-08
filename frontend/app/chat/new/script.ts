@@ -4,7 +4,14 @@ import api from "../../lib/api";
 
 const API = "https://mkkarekezi-testing-capstone.hf.space/api";
 
-// --- API ---
+// ── Types ──────────────────────────────────────────────────────────
+type QuestionItem = {
+  disease: string;
+  symptom: string;
+  question: string;
+};
+
+// ── API helpers ────────────────────────────────────────────────────
 export const createConversation = async () => {
   const response = await api.post("/chat/conversations/create/");
   return response.data;
@@ -34,7 +41,7 @@ export const getProfile = async () => {
   return response.data;
 };
 
-// --- Hook ---
+// ── Hook ───────────────────────────────────────────────────────────
 export function useChatSession() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     [],
@@ -43,10 +50,15 @@ export function useChatSession() {
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [userName, setUserName] = useState("");
   const [startedAt, setStartedAt] = useState<string | null>(null);
-  const [sessionData, setSessionData] = useState({
+  const [sessionData, setSessionData] = useState<{
+    keywords: string;
+    questions: QuestionItem[]; // ← objects, not strings
+    answers: string[];
+    currentQ: number;
+  }>({
     keywords: "",
-    questions: [] as string[],
-    answers: [] as string[],
+    questions: [],
+    answers: [],
     currentQ: 0,
   });
 
@@ -95,6 +107,7 @@ export function useChatSession() {
   const handleSend = async (input: string) => {
     if (!input.trim()) return;
 
+    // ── Stage: start ───────────────────────────────────────────────
     if (stage === "start") {
       setStartedAt(new Date().toISOString());
       addMessage("user", input);
@@ -110,7 +123,6 @@ export function useChatSession() {
           return;
         }
       }
-
       if (!convId) return;
 
       await saveMessage(convId, input, "user");
@@ -123,18 +135,49 @@ export function useChatSession() {
       });
       const data = await res.json();
 
-      const initialMsg = `Initial Assessment:\n${data.initial_predictions
+      // data.questions is now QuestionItem[] — extract .question text for display
+      const questions: QuestionItem[] = data.questions ?? [];
+      const skipFollowup: boolean = data.skip_followup ?? false;
+      const specialist: string = data.specialist ?? "";
+
+      const initialPredictions = (data.initial_predictions ?? [])
         .map(
-          (p: any, i: number) =>
+          (p: { disease: string; confidence: number }, i: number) =>
             `${i + 1}. ${p.disease} (${(p.confidence * 100).toFixed(1)}%)`,
         )
-        .join(
-          "\n",
-        )}\n\nI have a few follow-up questions. Answer Yes or No.\n\n${data.questions[0]}`;
+        .join("\n");
+
+      // If the model is already confident enough, skip follow-up entirely
+      if (skipFollowup || questions.length === 0) {
+        const topDisease = data.initial_predictions?.[0]?.disease ?? "Unknown";
+        const dateStr = new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+
+        await updateConversationTitle(convId, `${topDisease} — ${dateStr}`);
+
+        const finalMsg =
+          `Initial Assessment:\n${initialPredictions}` +
+          (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
+          `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`;
+
+        addMessage("assistant", finalMsg);
+        await saveMessage(convId, finalMsg, "assistant");
+        setStage("done");
+        return;
+      }
+
+      // Show assessment + first question text (questions[0].question)
+      const initialMsg =
+        `Initial Assessment:\n${initialPredictions}` +
+        `\n\nI have a few follow-up questions. Answer Yes or No.\n\n` +
+        questions[0].question;
 
       setSessionData({
         keywords: data.keywords,
-        questions: data.questions,
+        questions,
         answers: [],
         currentQ: 0,
       });
@@ -144,72 +187,83 @@ export function useChatSession() {
       return;
     }
 
+    // ── Stage: questions ───────────────────────────────────────────
     if (stage === "questions") {
       const answer = input.toLowerCase();
       if (!["yes", "no", "y", "n"].includes(answer)) {
         addMessage("assistant", "Please answer Yes or No only.");
         return;
       }
+
       addMessage("user", input);
       if (conversationId) await saveMessage(conversationId, input, "user");
+
       const updatedAnswers = [...sessionData.answers, answer];
       const nextQ = sessionData.currentQ + 1;
 
       if (nextQ < sessionData.questions.length) {
+        // Show the next question's text string only
+        const nextQuestion = sessionData.questions[nextQ].question;
         setSessionData({
           ...sessionData,
           answers: updatedAnswers,
           currentQ: nextQ,
         });
-        addMessage("assistant", sessionData.questions[nextQ]);
+        addMessage("assistant", nextQuestion);
         if (conversationId)
-          await saveMessage(
-            conversationId,
-            sessionData.questions[nextQ],
-            "assistant",
-          );
-      } else {
-        addMessage("assistant", "Processing your final assessment...");
-        const res = await fetch(`${API}/chat/answer`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            keywords: sessionData.keywords,
-            questions: sessionData.questions,
-            answers: updatedAnswers,
-          }),
-        });
-        const data = await res.json();
-
-        const topDisease = data.final_predictions[0]?.disease || "Unknown";
-        const dateStr = new Date().toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-
-        if (conversationId) {
-          await updateConversationTitle(
-            conversationId,
-            `${topDisease} — ${dateStr}`,
-          );
-        }
-
-        const finalMsg = `Final Assessment:\n${data.final_predictions
-          .map(
-            (p: any, i: number) =>
-              `${i + 1}. ${p.disease} — ${(p.confidence * 100).toFixed(2)}% confidence`,
-          )
-          .join(
-            "\n",
-          )}\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`;
-        addMessage("assistant", finalMsg);
-        if (conversationId)
-          await saveMessage(conversationId, finalMsg, "assistant");
-        setStage("done");
+          await saveMessage(conversationId, nextQuestion, "assistant");
+        return;
       }
+
+      // All questions answered — call /chat/answer
+      addMessage("assistant", "Processing your final assessment...");
+
+      const res = await fetch(`${API}/chat/answer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          keywords: sessionData.keywords,
+          questions: sessionData.questions, // QuestionItem[] as expected by backend
+          answers: updatedAnswers,
+        }),
+      });
+      const data = await res.json();
+
+      const topDisease = data.final_predictions?.[0]?.disease ?? "Unknown";
+      const specialist: string = data.specialist ?? "";
+      const dateStr = new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+
+      if (conversationId) {
+        await updateConversationTitle(
+          conversationId,
+          `${topDisease} — ${dateStr}`,
+        );
+      }
+
+      const finalPredictions = (data.final_predictions ?? [])
+        .map(
+          (p: { disease: string; confidence: number }, i: number) =>
+            `${i + 1}. ${p.disease} — ${(p.confidence * 100).toFixed(2)}% confidence`,
+        )
+        .join("\n");
+
+      const finalMsg =
+        `Final Assessment:\n${finalPredictions}` +
+        (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
+        `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`;
+
+      addMessage("assistant", finalMsg);
+      if (conversationId)
+        await saveMessage(conversationId, finalMsg, "assistant");
+      setStage("done");
+      return;
     }
 
+    // ── Stage: done — reset for a new session ──────────────────────
     if (stage === "done") {
       setMessages([]);
       setStage("start");
