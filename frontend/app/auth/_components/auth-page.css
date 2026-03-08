@@ -1,87 +1,78 @@
-.sign-up-wrapper {
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-  gap: 12px;
+.sign-up-wrapper-main {
+  background-color: white;
   background-color: #f0eee6;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 
-  .sign-up-wrapper-main {
-    background-color: white;
-    height: 100%;
-    border-radius: 8px;
-    width: 100%;
+  .sign-up-wrapper-main-form {
+    width: 50%;
+    padding: 16px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
 
-    .sign-up-wrapper-main-form {
-      width: 50%;
-      padding: 16px;
+    .sign-up-wrapper-main-form-title {
+      text-align: center;
+      text-transform: capitalize;
+      width: 360px;
+      font-size: 24px;
+    }
+
+    .sign-up-wrapper-form-sign-up {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 32px;
+      gap: 8px;
 
-      .sign-up-wrapper-main-form-title {
-        text-align: center;
-        text-transform: capitalize;
+      input {
+        /* height: 62px; */
+        padding: 20px;
+        border-radius: 100px;
+        border: 0.75px solid black;
         width: 360px;
-        font-size: 24px;
+
+        placeholder {
+          color: rgb(0, 0, 0, 0.5);
+          font-size: 14px;
+        }
       }
 
-      .sign-up-wrapper-form-sign-up {
+      .sign-up-wrapper-form-sign-up-btn {
+        background-color: black;
+        border-radius: 100px;
+        color: white;
+        padding: 20px;
         display: flex;
-        flex-direction: column;
-        gap: 8px;
-
-        input {
-          /* height: 62px; */
-          padding: 20px;
-          border-radius: 100px;
-          border: 0.75px solid black;
-          width: 360px;
-
-          placeholder {
-            color: rgb(0, 0, 0, 0.5);
-            font-size: 14px;
-          }
-        }
-
-        .sign-up-wrapper-form-sign-up-btn {
-          background-color: black;
-          border-radius: 100px;
-          color: white;
-          padding: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
-
-      .sign-up-wrapper-main-form-policy {
-        width: 360px;
-        text-align: center;
-        font-size: 10px;
+        align-items: center;
+        justify-content: center;
       }
     }
 
-    .sign-up-wrapper-main-img {
-      width: 50%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    .sign-up-wrapper-main-form-policy {
+      width: 360px;
+      text-align: center;
+      font-size: 10px;
+    }
+  }
 
-      img {
-        width: 100%;
-        height: calc(100vh - 164px);
-        object-fit: cover;
-        border-radius: 8px 0px 0px 8px;
-      }
+  .sign-up-wrapper-main-img {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: calc(100vh - 164px);
+      object-fit: cover;
+      border-radius: 8px 0px 0px 8px;
     }
   }
 }

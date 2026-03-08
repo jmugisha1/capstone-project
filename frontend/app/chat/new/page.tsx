@@ -25,7 +25,8 @@ const agents: Agent[] = [
 ];
 
 export default function NewChat() {
-  const { messages, stage, handleSend } = useChatSession();
+  const { messages, stage, handleSend, formatHeaderName, formatHeaderDate } =
+    useChatSession();
   const [text, setText] = useState("");
   const messagesRef = useRef<HTMLDivElement>(null);
   const hasMessages = messages.length > 0;
@@ -52,8 +53,8 @@ export default function NewChat() {
   return (
     <div className="chat-new">
       <header className="chat-new-header">
-        <p className="chat-new-header-par">diagonse number/id</p>
-        <p className="chat-new-header-par">date and time</p>
+        <p className="chat-new-header-par">{formatHeaderName()}</p>
+        <p className="chat-new-header-par">{formatHeaderDate()}</p>
       </header>
 
       <main

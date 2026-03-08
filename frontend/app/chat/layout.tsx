@@ -1,4 +1,7 @@
+"use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import api from "../lib/api";
 import "./layout.css";
 
 export default function ChatLayout({
@@ -6,8 +9,30 @@ export default function ChatLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [firstName, setFirstName] = useState("");
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) setTheme(saved);
+
+    const handleThemeChange = () => {
+      const updated = localStorage.getItem("theme");
+      if (updated) setTheme(updated);
+    };
+
+    window.addEventListener("theme-change", handleThemeChange);
+
+    api
+      .get("/auth/profile/")
+      .then((res) => setFirstName(res.data.full_name.split(" ")[0]))
+      .catch((err) => console.error("Failed to fetch profile", err));
+
+    return () => window.removeEventListener("theme-change", handleThemeChange);
+  }, []);
+
   return (
-    <div className="chat-wrapper">
+    <div className="chat-wrapper" data-theme={theme}>
       <nav className="chat-wrapper-navigation">
         <main className="chat-wrapper-navigation-main">
           <button className="chat-wrapper-navigation-main-cta">
@@ -27,17 +52,6 @@ export default function ChatLayout({
             />
           </Link>
           <Link
-            href="chat/reports"
-            className="chat-wrapper-navigation-main-link"
-          >
-            <span className="navigation-main-links-span">reports</span>
-            <img
-              className="navigation-main-links-icons"
-              src="/icons/file-text.svg"
-              alt=""
-            />
-          </Link>
-          <Link
             href="/chat/history"
             className="chat-wrapper-navigation-main-link"
           >
@@ -48,8 +62,10 @@ export default function ChatLayout({
               alt=""
             />
           </Link>
-
-          <Link href="#" className="chat-wrapper-navigation-main-link">
+          <Link
+            href="/chat/settings"
+            className="chat-wrapper-navigation-main-link"
+          >
             <span className="navigation-main-links-span">app settings</span>
             <img
               className="navigation-main-links-icons"
@@ -59,7 +75,7 @@ export default function ChatLayout({
           </Link>
         </main>
         <div className="navigation-account">
-          <h1>user-name</h1>
+          <h1>{firstName || "..."}</h1>
         </div>
       </nav>
 

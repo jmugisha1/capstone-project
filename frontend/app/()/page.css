@@ -1,19 +1,85 @@
 .home-wrapper {
   display: flex;
-  flex-direction: column;
-  padding: 12px;
-  gap: 12px;
+  flex-direction: row;
+  padding: 8px;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   overflow: hidden;
   background-color: #f0eee6;
 
   .home-wrapper-main {
+    width: 60%;
     display: flex;
-    background-color: white;
-    border-radius: 8px;
-    width: 100%;
     flex-direction: column;
-    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 144px;
+    gap: 32px;
+
+    .home-wrapper-main-icon {
+      height: 48px;
+      width: 48px;
+    }
+
+    .home-wrapper-main-title {
+      font-size: 39px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .home-wrapper-main-title-sub {
+      font-size: 12px;
+      width: 560px;
+      text-align: center;
+    }
+  }
+
+  .home-wrapper-auth {
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+      url("/media/sign-up.jpg") no-repeat;
+    background-size: cover;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    border-radius: 8px;
+
+    .home-wrapper-auth-title {
+      color: white;
+      font-weight: 600;
+      font-size: 32px;
+      text-transform: capitalize;
+    }
+
+    .home-wrapper-auth-links {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+
+      .home-wrapper-auth-links-signup {
+        padding: 12px 16px;
+        border-radius: 100px;
+        background-color: white;
+        color: black;
+        font-weight: 450;
+        text-transform: capitalize;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .home-wrapper-auth-links-login {
+        padding: 12px 16px;
+        border-radius: 100px;
+        border: 1.6px solid white;
+        color: white;
+        font-weight: 450;
+        text-transform: capitalize;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
   }
 }

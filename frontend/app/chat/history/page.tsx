@@ -4,17 +4,11 @@ import { useChatHistory } from "./script";
 import "./page.css";
 
 export default function ChatHistory() {
-  const {
-    conversations,
-    search,
-    loading,
-    handleSearch,
-    handleNewChat,
-    formatDate,
-  } = useChatHistory();
+  const { conversations, search, loading, handleSearch, formatDate } =
+    useChatHistory();
 
   return (
-    <main className="chat-history">
+    <div className="chat-history">
       <header className="chat-history-header">
         <img
           src="/icons/chats-circle.svg"
@@ -24,44 +18,39 @@ export default function ChatHistory() {
         <h1 className="chat-history-header-title">chat history</h1>
       </header>
 
-      <div className="chatbot-history-wrapper-main-subheader">
-        <p className="chatbot-history-wrapper-main-subheader-par">
+      <div className="chat-history-subheader">
+        <p className="chat-history-subheader-par">
           all the chats with the curamedica will appear here
         </p>
-        <button
-          onClick={handleNewChat}
-          className="chatbot-history-wrapper-main-subheader-link"
-        >
+        <Link className="chat-history-subheader-link" href="/chat/new">
           <img
             src="/icons/plus.svg"
             alt=""
-            className="chatbot-history-wrapper-main-subheader-link-icon"
+            className="chat-history-subheader-link-icon"
           />
-          <span className="chatbot-history-wrapper-main-subheader-link-span">
-            new chat
-          </span>
-        </button>
+          <span className="chat-history-subheader-link-span">new chat</span>
+        </Link>
       </div>
 
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="chatbot-history-main-search"
+        className="chat-history-search"
       >
         <img
           src="/icons/magnifying-glass.svg"
           alt=""
-          className="chatbot-history-main-search-icon"
+          className="chat-history-search-icon"
         />
         <input
           type="text"
           placeholder="search your chats"
-          className="chatbot-history-main-search-input"
+          className="chat-history-search-input"
           value={search}
           onChange={handleSearch}
         />
       </form>
 
-      <div className="chatbot-history-wrapper-main-results">
+      <div className="chat-history-results">
         {loading ? (
           <p>Loading...</p>
         ) : conversations.length === 0 ? (
@@ -71,7 +60,7 @@ export default function ChatHistory() {
             <Link
               key={conv.id}
               href={"/chat/" + conv.id}
-              className="chatbot-history-wrapper-main-results-chat"
+              className="chat-history-results-link"
             >
               <p>{conv.title || "Consultation"}</p>
               <p>{formatDate(conv.created_at)}</p>
@@ -79,6 +68,6 @@ export default function ChatHistory() {
           ))
         )}
       </div>
-    </main>
+    </div>
   );
 }

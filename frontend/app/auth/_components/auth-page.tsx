@@ -1,5 +1,4 @@
 import React from "react";
-import { NavigationWebsite } from "../../components/navigation/navigation-component";
 import "./auth-page.css";
 
 type AuthMode = "signup" | "login" | "verify";
@@ -29,80 +28,77 @@ export function AuthPage({ mode, title, subtitle, onSubmit }: AuthPageProps) {
   };
 
   return (
-    <div className="sign-up-wrapper">
-      <NavigationWebsite />
-      <main className="sign-up-wrapper-main">
-        <div className="sign-up-wrapper-main-form">
-          <h1 className="sign-up-wrapper-main-form-title">
-            {title ?? titleMap[mode]}
-          </h1>
+    <main className="sign-up-wrapper-main">
+      <div className="sign-up-wrapper-main-form">
+        <h1 className="sign-up-wrapper-main-form-title">
+          {title ?? titleMap[mode]}
+        </h1>
 
-          <p className="sign-up-wrapper-main-form-subtitle">
-            {subtitle ?? subtitleMap[mode]}
-          </p>
+        <p className="sign-up-wrapper-main-form-subtitle">
+          {subtitle ?? subtitleMap[mode]}
+        </p>
 
-          <form className="sign-up-wrapper-form-sign-up" onSubmit={onSubmit}>
-            {isSignup && (
-              <>
-                <input
-                  type="text"
-                  name="fullname"
-                  placeholder="full name"
-                  required
-                />
-                <input type="email" name="email" placeholder="email" required />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  required
-                />
-                <input
-                  type="password"
-                  name="repeatPassword"
-                  placeholder="repeat password"
-                  required
-                />
-              </>
-            )}
-
-            {isLogin && (
-              <>
-                <input type="email" name="email" placeholder="email" required />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  required
-                />
-              </>
-            )}
-
-            {isVerify && (
+        <form className="sign-up-wrapper-form-sign-up" onSubmit={onSubmit}>
+          {isSignup && (
+            <>
               <input
                 type="text"
-                name="verificationCode"
-                placeholder="verification code"
+                name="fullname"
+                placeholder="full name"
                 required
               />
-            )}
+              <input type="email" name="email" placeholder="email" required />
+              <input
+                type="password"
+                name="password"
+                placeholder="password"
+                required
+              />
+              <input
+                type="password"
+                name="repeatPassword"
+                placeholder="repeat password"
+                required
+              />
+            </>
+          )}
 
-            <button type="submit" className="sign-up-wrapper-form-sign-up-btn">
-              {isSignup && "Sign Up"}
-              {isLogin && "Login"}
-              {isVerify && "Verify"}
-            </button>
-          </form>
+          {isLogin && (
+            <>
+              <input type="email" name="email" placeholder="email" required />
+              <input
+                type="password"
+                name="password"
+                placeholder="password"
+                required
+              />
+            </>
+          )}
 
-          <p className="sign-up-wrapper-main-form-policy">
-            By continuing, you agree to our Terms and Privacy Policy.
-          </p>
-        </div>
+          {isVerify && (
+            <input
+              type="text"
+              name="verificationCode"
+              placeholder="verification code"
+              required
+            />
+          )}
 
-        <div className="sign-up-wrapper-main-img">
-          <img src="/media/sign-up.jpg" alt="" />
-        </div>
-      </main>
-    </div>
+          <button type="submit" className="sign-up-wrapper-form-sign-up-btn">
+            {isSignup && "Sign Up"}
+            {isLogin && "Login"}
+            {isVerify && "Verify"}
+          </button>
+        </form>
+
+        <p className="sign-up-wrapper-main-form-policy">
+          By continuing, you agree to our Terms and Privacy Policy.
+        </p>
+      </div>
+
+      <div className="sign-up-wrapper-main-img">
+        <img src="/media/sign-up.jpg" alt="" />
+      </div>
+    </main>
   );
 }

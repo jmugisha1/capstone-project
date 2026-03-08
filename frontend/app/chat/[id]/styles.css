@@ -1,0 +1,97 @@
+.chat-report {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 8px;
+  border: 0.55px solid rgb(0, 0, 0, 0.15);
+
+  .chat-report-title {
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .chat-report-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px 200px;
+    gap: 32px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chat-report-wrapper-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .chat-report-wrapper-header-disease {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      span {
+        font-size: 26px;
+        text-transform: capitalize;
+      }
+    }
+
+    .chat-report-wrapper-details {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 64px;
+
+      .chat-report-wrapper-details-title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 126px;
+        gap: 16px;
+
+        span {
+          text-transform: capitalize;
+        }
+        img {
+          height: 18px;
+          width: 18px;
+        }
+      }
+
+      .chat-report-details-cta {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+
+        .chat-report-details-cta-delete {
+          padding: 4px 8px;
+          border-radius: 16px;
+          cursor: pointer;
+          background-color: #d50000;
+          color: white;
+        }
+        .chat-report-details-cta-download {
+          padding: 8px;
+          border-radius: 16px;
+          cursor: pointer;
+          color: white;
+          background-color: #168bff;
+        }
+      }
+    }
+  }
+}
