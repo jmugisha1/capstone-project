@@ -1,7 +1,11 @@
 import axios from "axios";
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://capstone-project-f5nm.onrender.com/api";
+
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: BASE_URL,
 });
 
 // Attach access token
@@ -25,12 +29,9 @@ api.interceptors.response.use(
       const refresh = localStorage.getItem("refresh");
       if (refresh) {
         try {
-          const res = await axios.post(
-            "http://localhost:8000/api/auth/token/refresh/",
-            {
-              refresh,
-            },
-          );
+          const res = await axios.post(`${BASE_URL}/auth/token/refresh/`, {
+            refresh,
+          });
           localStorage.setItem("access", res.data.access);
           if (res.data.refresh) {
             localStorage.setItem("refresh", res.data.refresh);
