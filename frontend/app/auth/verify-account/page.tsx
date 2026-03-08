@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
 import { AuthPage } from "../_components/auth-page";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,7 +20,6 @@ function VerifyAccountContent() {
         email,
         code: formData.get("verificationCode") as string,
       });
-
       router.push("/auth/login");
     } catch (error: any) {
       console.error(error.response?.data);
