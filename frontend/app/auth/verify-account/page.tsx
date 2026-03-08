@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import VerifyAccountContent from "./verify-account-content";
+// import { Suspense } from "react";
+// import VerifyAccountContent from "./verify-account-content";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
-export default function VerifyAccountPage() {
-  return (
-    <Suspense>
-      <VerifyAccountContent />
-    </Suspense>
-  );
-}
+// export default function VerifyAccountPage() {
+//   return (
+//     <Suspense>
+//       <VerifyAccountContent />
+//     </Suspense>
+//   );
+// }
