@@ -53,7 +53,7 @@ export const registerPatient = async (data: {
   email: string;
   password: string;
 }) => {
-  const response = await api.post("/auth/register/", data);
+  const response = await api.post("/auth/register/patient/", data);
   return response.data;
 };
 
