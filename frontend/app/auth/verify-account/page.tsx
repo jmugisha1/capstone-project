@@ -1,9 +1,10 @@
 "use client";
+import { Suspense } from "react";
 import { AuthPage } from "../_components/auth-page";
 import { useRouter, useSearchParams } from "next/navigation";
 import { verifyEmail } from "../_config/auth-config";
 
-export default function VerifyAccountPage() {
+function VerifyAccountContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -26,4 +27,12 @@ export default function VerifyAccountPage() {
   };
 
   return <AuthPage mode="verify" onSubmit={handleSubmit} />;
+}
+
+export default function VerifyAccountPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyAccountContent />
+    </Suspense>
+  );
 }
