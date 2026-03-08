@@ -16,17 +16,14 @@ ALLOWED_HOSTS = [
     "capstone-project-f5nm.onrender.com",  # ← was missing
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://capstone-project-02-seven.vercel.app"
-]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://capstone-project-02-seven.vercel.app",
     "https://capstone-project-f5nm.onrender.com",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 INSTALLED_APPS = [
