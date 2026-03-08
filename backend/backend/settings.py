@@ -18,7 +18,7 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://capstone-project-02-seven.vercel.app0,"
+    "https://capstone-project-02-seven.vercel.app0"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
