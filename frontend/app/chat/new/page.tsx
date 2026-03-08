@@ -9,17 +9,17 @@ type Agent = { imgSrc: string; desc: string; href: string };
 const agents: Agent[] = [
   {
     imgSrc: "/media/Frame-18.png",
-    desc: "Siscover how to leverage Claude's capabilities for your.",
+    desc: "new agent for booking comming soon.",
     href: "#",
   },
   {
     imgSrc: "/media/Frame-20.png",
-    desc: "Liscover how to leverage Claude's capabilities for your.",
+    desc: "new agent for voice chatting comming soon.",
     href: "#",
   },
   {
     imgSrc: "/media/Frame-19.png",
-    desc: "Discover how to leverage Claude's capabilities for your.",
+    desc: "new agent for transalating comming soon",
     href: "#",
   },
 ];
