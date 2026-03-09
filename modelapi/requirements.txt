@@ -1,0 +1,10 @@
+pandas
+numpy
+pickle5
+sentence-transformers
+scikit-learn
+tensorflow-cpu
+openai
+django
+django-ninja
+gunicorn
