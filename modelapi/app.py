@@ -48,7 +48,7 @@ vocab_size = len(keyword_list)
 
 nvidia_client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key="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"
+    api_key="myapi"
 )
 
 # ── Helper functions ──────────────────────────────────────────────
@@ -322,4 +322,5 @@ def health(request):
 
 
 urlpatterns = [path("api/", api.urls)]
+
 application = get_wsgi_application()
