@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import api from "../../lib/api";
+import api from "../../_config/api";
 
 export const getProfile = async () => {
   const response = await api.get("/auth/profile/");

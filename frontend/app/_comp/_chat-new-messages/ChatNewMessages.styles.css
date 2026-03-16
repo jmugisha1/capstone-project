@@ -1,0 +1,43 @@
+.chat-new-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: 16px;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .chat-new-messages-user {
+    justify-content: flex-end;
+    display: flex;
+    width: 100%;
+
+    .chat-new-messages-bubble-user {
+      background-color: var(--color-white-01);
+      border-radius: 8px;
+      padding: 16px;
+    }
+  }
+
+  .chat-new-messages-assistant {
+    justify-content: flex-start;
+    display: flex;
+    width: 100%;
+  }
+}

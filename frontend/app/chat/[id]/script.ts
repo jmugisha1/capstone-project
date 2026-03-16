@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import api from "../../lib/api";
+import api from "../../_config/api";
 
 export const getConversation = async (id: number) => {
   const response = await api.get(`/chat/conversations/${id}/`);

@@ -1,17 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import api from "../../lib/api";
+import api from "../../_config/api";
 
-// --- API ---
-export const loginPatient = async (data: {
-  email: string;
-  password: string;
-}) => {
+const loginPatient = async (data: { email: string; password: string }) => {
   const response = await api.post("/auth/login/", data);
   return response.data;
 };
 
-// --- Hook ---
 export function useSignIn() {
   const router = useRouter();
 
@@ -24,7 +19,6 @@ export function useSignIn() {
         email: formData.get("email") as string,
         password: formData.get("password") as string,
       });
-
       localStorage.setItem("access", res.access);
       localStorage.setItem("refresh", res.refresh);
       router.push("/chat/new");

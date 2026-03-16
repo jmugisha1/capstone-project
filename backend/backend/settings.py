@@ -1,7 +1,9 @@
 from pathlib import Path
 import os
-import dj_database_url
+from datetime import timedelta
 from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,9 +15,8 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "capstone-project-f5nm.onrender.com",  # ← was missing
+    "capstone-project-f5nm.onrender.com",
 ]
-
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
@@ -25,7 +26,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Application definition
 INSTALLED_APPS = [
     "corsheaders",
     'django.contrib.admin',
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'authentication',
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',  # ← add this
+    'rest_framework_simplejwt.token_blacklist',
     'chat',
 ]
 
@@ -71,12 +71,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+# ── Database — Neon (works locally + on Render) ────────────────────
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -104,7 +111,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),

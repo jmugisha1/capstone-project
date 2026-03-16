@@ -1,41 +1,49 @@
 import localFont from "next/font/local";
 import "./globals.css";
 
-const CooperHewitt = localFont({
-  src: "../public/fonts/CooperHewitt/CooperHewitt-Book.woff",
-  weight: "400",
-  variable: "--font-cooperhewitt",
-  display: "swap",
-});
-
-const opensans = localFont({
-  src: "../public/fonts/open-sans/OpenSans-Regular.ttf",
-  weight: "400",
-  variable: "--font-opensans",
-  display: "swap",
-});
-
-const worksans = localFont({
+const Amulya = localFont({
   src: [
     {
-      path: "../public/fonts/worksans/WorkSans-VariableFont_wght.ttf",
-      weight: "100 900",
+      path: "../public/fonts/Amulya/Amulya-Variable.woff2",
+      weight: "300 700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Amulya/Amulya-VariableItalic.woff2",
+      weight: "300 700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-amulya",
+  display: "swap",
+});
+
+const Manrope = localFont({
+  src: [
+    {
+      path: "../public/fonts/Manrope/Manrope-Variable.woff2",
+      weight: "200 800",
       style: "normal",
     },
   ],
-  variable: "--font-worksans",
+  variable: "--font-Manrope",
   display: "swap",
 });
 
-const PlusJakartaSans = localFont({
+const Literate = localFont({
   src: [
     {
-      path: "../public/fonts/PlusJakartaSans/PlusJakartaSans-Variable.woff2",
-      weight: "100 900",
+      path: "../public/fonts/Literate/Literata-Variable.woff2",
+      weight: "200 900",
       style: "normal",
     },
+    {
+      path: "../public/fonts/Literate/Literata-VariableItalic.woff2",
+      weight: "200 900",
+      style: "italic",
+    },
   ],
-  variable: "--font-PlusJakartaSans",
+  variable: "--font-literate",
   display: "swap",
 });
 
@@ -47,7 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${CooperHewitt.variable} ${opensans.variable} ${worksans.variable} ${PlusJakartaSans.variable}`}
+      className={`${Amulya.variable} ${Literate.variable} ${Manrope.variable}`}
     >
       <body>{children}</body>
     </html>

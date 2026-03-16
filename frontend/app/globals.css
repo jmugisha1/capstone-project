@@ -22,29 +22,109 @@ textarea {
 }
 
 html {
-  font-size: 62.5%; /* Now 1rem = 10px */
+  font-size: 62.5%;
 }
 
 body {
-  background-color: #f9f9f9;
-  font-size: 1.6rem; /* 16px */
-  font-family: var(--font-PlusJakartaSans);
-  font-weight: 300;
+  background-color: var(--color-white-02);
+  color: #0d0d0d;
 }
 
+/* TYPOGRAPHY =============================================================*/
+
+.text-size-01 {
+  font-size: clamp(2rem, 4vw + 1rem, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.32px;
+  font-weight: 700;
+}
+
+/* TEST SIZE HEADINGS */
+.text-size-02 {
+  font-size: clamp(1.42375rem, 1.2145rem + 1.1955vw, 4.561875rem);
+  font-weight: 350;
+  font-family: var(--font-literate);
+  text-transform: capitalize;
+}
+
+/* USED ON NAVIGATION AND HEADER */
+.text-size-03 {
+  font-size: clamp(0.88875rem, 0.8279rem + 0.3479vw, 1.801875rem);
+  font-weight: 425;
+  font-family: var(--font-amulya);
+  text-transform: capitalize;
+}
+
+/* USED ON BODY CHAT INPUT RESPONSE  */
+.text-size-04 {
+  font-size: clamp(1rem, 0.9465rem + 0.3055vw, 1.801875rem);
+  font-weight: 400;
+  font-family: var(--font-amulya);
+}
+
+/* FONT SIZE LABELS */
+.text-size-05 {
+  font-size: clamp(0.88875rem, 0.8531rem + 0.2038vw, 1.42375rem);
+  color: var(--color-gray-01s);
+  font-weight: 300;
+  font-family: var(--font-amulya);
+}
+
+/* ICON SIZES ================================================================ */
+
+.icon-size-01 {
+  height: clamp(1rem, 0.9465rem + 0.3055vw, 1.801875rem) !important;
+  width: clamp(1rem, 0.9465rem + 0.3055vw, 1.801875rem) !important;
+  filter: brightness(0) saturate(100%) invert(6%) sepia(8%) saturate(5035%)
+    hue-rotate(185deg) brightness(101%) contrast(93%);
+}
+
+/* FLEX CONTAINDER  */
+
+.chat-main-inner {
+  padding-left: clamp(0.5rem, -3.4667rem + 22.6667vw, 60rem);
+  padding-right: clamp(0.5rem, -3.4667rem + 22.6667vw, 60rem);
+  padding-bottom: 32px;
+  padding-top: 32px;
+  gap: 40px;
+}
+
+.chat-main-outer {
+  border-radius: 8px;
+  border: 0.55px solid rgb(0, 0, 0, 0.15);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+/*  */
+
 :root {
-  /* Heading using 1.125 */
-  --font-heading: clamp(1.602rem, 1.1934rem + 2.043vw, 3.645rem);
-  --font-sub-heading: clamp(1.44rem, 1.1308rem + 1.546vw, 2.986rem);
-  --font-paragraphs: clamp(1rem, 0.8796rem + 0.602vw, 1.602rem);
-  --font-cta: clamp(1.266rem, 1.1588rem + 0.536vw, 1.802rem);
+  /* easing */
+  --ease-01: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-02: cubic-bezier(0.4, 0, 1, 1);
+  --ease-03: cubic-bezier(0, 0, 0.2, 1);
+  --ease-04: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* padding */
-  --padding-wrapper: clamp(2rem, 0.2rem + 1.5vw, 2rem)
-    clamp(1rem, -1.9rem + 12vw, 12.5rem);
+  /* duration */
+  --duration-01: 100ms;
+  --duration-02: 200ms;
+  --duration-03: 300ms;
 
-  /* icon sizes  */
-  --icon-sizes: clamp(1.25rem, 1.175rem + 0.375vw, 1.625rem);
+  /* white / gray */
+  --color-white-01: #ffffff;
+  --color-white-02: #f6f6f6;
+  --color-white-03: #f7f7f8;
 
-  /*  */
+  /* gray */
+  --color-gray-01: #e5e7eb;
+  --color-gray-02: #d1d5db;
+  --color-gray-03: #6b7280;
+
+  /* green */
+  --color-green-01: #10a37f;
+  --color-green-02: #0e8e6f;
 }

@@ -6,101 +6,11 @@
   display: flex;
   flex-direction: row;
   gap: 12px;
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.chat-wrapper[data-theme="dark"] {
-  background-color: #1a1a1a;
-  color: #e0e0e0;
-}
-
-.chat-wrapper .chat-wrapper-navigation {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 160px;
-}
-
-.chat-wrapper .chat-wrapper-navigation .chat-wrapper-navigation-main {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 160px;
-}
-
-.chat-wrapper
-  .chat-wrapper-navigation
-  .chat-wrapper-navigation-main
-  .chat-wrapper-navigation-main-cta {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  color: inherit;
-}
-
-.chat-wrapper
-  .chat-wrapper-navigation
-  .chat-wrapper-navigation-main
-  .chat-wrapper-navigation-main-cta
-  img {
-  width: 18px;
-  height: 18px;
-}
-
-.chat-wrapper
-  .chat-wrapper-navigation
-  .chat-wrapper-navigation-main
-  .chat-wrapper-navigation-main-link {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  cursor: pointer;
-  color: inherit;
-}
-
-.chat-wrapper
-  .chat-wrapper-navigation
-  .chat-wrapper-navigation-main
-  .chat-wrapper-navigation-main-link
-  img {
-  width: 18px;
-  height: 18px;
-}
-
-.chat-wrapper[data-theme="dark"] .chat-wrapper-navigation img {
-  filter: invert(1);
 }
 
 .chat-wrapper .chat-content {
-  width: 100%;
+  flex: 1;
   height: 100%;
   overflow: hidden;
-}
-
-/* Dark mode overrides for child pages */
-.chat-wrapper[data-theme="dark"] .chat-content .chat-new {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.chat-wrapper[data-theme="dark"] .chat-content .chat-history {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.chat-wrapper[data-theme="dark"] .chat-content .chat-settings {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.chat-wrapper[data-theme="dark"] .chat-content .chat-detail {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border-color: rgba(255, 255, 255, 0.15);
+  min-width: 0;
 }

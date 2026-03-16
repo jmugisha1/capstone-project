@@ -1,8 +1,31 @@
 "use client";
 import { useSignIn } from "./script";
-import { AuthPage } from "../_components/auth-page";
 
 export default function SignInPage() {
   const { handleSubmit } = useSignIn();
-  return <AuthPage mode="login" onSubmit={handleSubmit} />;
+
+  return (
+    <>
+      <h1>welcome back</h1>
+      <form className="auth-page-wrapper-forms" onSubmit={handleSubmit}>
+        <input
+          className="auth-page-wrapper-forms-input text-size-03"
+          type="email"
+          name="email"
+          placeholder="email"
+          required
+        />
+        <input
+          className="auth-page-wrapper-forms-input .text-size-03"
+          type="password"
+          name="password"
+          placeholder="password"
+          required
+        />
+        <button type="submit" className="auth-page-wrapper-forms-submit">
+          <span className="text-size-03">sign in</span>
+        </button>
+      </form>
+    </>
+  );
 }

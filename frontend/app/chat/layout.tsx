@@ -1,7 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import api from "../lib/api";
+import api from "../_config/api";
+import {
+  ChatNavDesk,
+  ChatNavMob,
+  ChatNavMobBar,
+} from "../_comp/_chat-nav/ChatNav";
 import "./layout.css";
 
 export default function ChatLayout({
@@ -11,6 +15,8 @@ export default function ChatLayout({
 }) {
   const [firstName, setFirstName] = useState("");
   const [theme, setTheme] = useState("light");
+  const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -32,52 +38,23 @@ export default function ChatLayout({
   }, []);
 
   return (
-    <div className="chat-wrapper" data-theme={theme}>
-      <nav className="chat-wrapper-navigation">
-        <main className="chat-wrapper-navigation-main">
-          <button className="chat-wrapper-navigation-main-cta">
-            <h1>cura-medica</h1>
-            <img
-              className="navigation-main-cta-icon"
-              src="/icons/sidebar-simple.svg"
-              alt=""
-            />
-          </button>
-          <Link href="/chat/new" className="chat-wrapper-navigation-main-link">
-            <span className="navigation-main-links-span">new chat</span>
-            <img
-              className="navigation-main-links-icons"
-              src="/icons/chats-circle.svg"
-              alt=""
-            />
-          </Link>
-          <Link
-            href="/chat/history"
-            className="chat-wrapper-navigation-main-link"
-          >
-            <span className="navigation-main-links-span">chat history</span>
-            <img
-              className="navigation-main-links-icons"
-              src="/icons/clock-counter-clockwise.svg"
-              alt=""
-            />
-          </Link>
-          <Link
-            href="/chat/settings"
-            className="chat-wrapper-navigation-main-link"
-          >
-            <span className="navigation-main-links-span">app settings</span>
-            <img
-              className="navigation-main-links-icons"
-              src="/icons/sliders-horizontal.svg"
-              alt=""
-            />
-          </Link>
-        </main>
-        <div className="navigation-account">
-          <h1>{firstName || "..."}</h1>
-        </div>
-      </nav>
+    <div className="chat-wrapper">
+      {/* Desktop sidebar */}
+      <ChatNavDesk
+        firstName={firstName}
+        isCollapsed={isCollapsed}
+        onToggle={() => setIsCollapsed(!isCollapsed)}
+      />
+
+      {/* Mobile top bar — "cura-medica" + sidebar icon */}
+      <ChatNavMobBar onOpen={() => setIsOpen(true)} />
+
+      {/* Mobile slide-out drawer */}
+      <ChatNavMob
+        firstName={firstName}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
 
       <section className="chat-content">{children}</section>
     </div>

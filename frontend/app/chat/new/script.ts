@@ -1,61 +1,71 @@
 "use client";
 import { useState, useEffect } from "react";
-import api from "../../lib/api";
+import api from "../../_config/api";
+import {
+  formatHeaderName,
+  formatHeaderDate,
+} from "../../_comp/_chat-new-header/ChatNewHeader.script";
 
+// ─── Constants ────────────────────────────────────────────
 const API = "https://mkkarekezi-testing-capstone.hf.space/api";
 
-// ── Types ──────────────────────────────────────────────────────────
-type QuestionItem = {
+// ─── Types ────────────────────────────────────────────────
+export type QuestionItem = {
   disease: string;
   symptom: string;
   question: string;
 };
 
-// ── API helpers ────────────────────────────────────────────────────
-export const createConversation = async () => {
-  const response = await api.post("/chat/conversations/create/");
-  return response.data;
+export type Message = {
+  role: string;
+  content: string;
 };
 
-export const sendMessage = async (
+export type Stage = "start" | "questions" | "done";
+
+export type SessionData = {
+  keywords: string;
+  questions: QuestionItem[];
+  answers: string[];
+  currentQ: number;
+};
+
+// ─── API ──────────────────────────────────────────────────
+const createConversation = async () => {
+  const res = await api.post("/chat/conversations/create/");
+  return res.data;
+};
+
+const sendMessage = async (
   id: number,
   content: string,
   role: string = "user",
 ) => {
-  const response = await api.post(`/chat/conversations/${id}/message/`, {
+  const res = await api.post(`/chat/conversations/${id}/message/`, {
     content,
     role,
   });
-  return response.data;
+  return res.data;
 };
 
-export const updateConversationTitle = async (id: number, title: string) => {
-  const response = await api.post(`/chat/conversations/${id}/title/`, {
-    title,
-  });
-  return response.data;
+const updateConversationTitle = async (id: number, title: string) => {
+  const res = await api.post(`/chat/conversations/${id}/title/`, { title });
+  return res.data;
 };
 
-export const getProfile = async () => {
-  const response = await api.get("/auth/profile/");
-  return response.data;
+const getProfile = async () => {
+  const res = await api.get("/auth/profile/");
+  return res.data;
 };
 
-// ── Hook ───────────────────────────────────────────────────────────
+// ─── Hook ─────────────────────────────────────────────────
 export function useChatSession() {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    [],
-  );
-  const [stage, setStage] = useState<"start" | "questions" | "done">("start");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [stage, setStage] = useState<Stage>("start");
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [userName, setUserName] = useState("");
   const [startedAt, setStartedAt] = useState<string | null>(null);
-  const [sessionData, setSessionData] = useState<{
-    keywords: string;
-    questions: QuestionItem[]; // ← objects, not strings
-    answers: string[];
-    currentQ: number;
-  }>({
+  const [sessionData, setSessionData] = useState<SessionData>({
     keywords: "",
     questions: [],
     answers: [],
@@ -86,28 +96,18 @@ export function useChatSession() {
     }
   };
 
-  const formatHeaderName = () => {
-    if (!hasStarted) return "Untitled Diagnosis";
-    const names = userName ? userName.split(" ").slice(0, 2).join(" ") : "User";
-    return `${names} — Diagnosis #${conversationId ?? "..."}`;
-  };
-
-  const formatHeaderDate = () => {
-    const date = startedAt ? new Date(startedAt) : new Date();
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+  const resetSession = () => {
+    setMessages([]);
+    setStage("start");
+    setStartedAt(null);
+    setConversationId(null);
+    setSessionData({ keywords: "", questions: [], answers: [], currentQ: 0 });
   };
 
   const handleSend = async (input: string) => {
     if (!input.trim()) return;
 
-    // ── Stage: start ───────────────────────────────────────────────
+    // ── Stage: start ──
     if (stage === "start") {
       setStartedAt(new Date().toISOString());
       addMessage("user", input);
@@ -135,7 +135,6 @@ export function useChatSession() {
       });
       const data = await res.json();
 
-      // data.questions is now QuestionItem[] — extract .question text for display
       const questions: QuestionItem[] = data.questions ?? [];
       const skipFollowup: boolean = data.skip_followup ?? false;
       const specialist: string = data.specialist ?? "";
@@ -147,16 +146,9 @@ export function useChatSession() {
         )
         .join("\n");
 
-      // If the model is already confident enough, skip follow-up entirely
       if (skipFollowup || questions.length === 0) {
         const topDisease = data.initial_predictions?.[0]?.disease ?? "Unknown";
-        const dateStr = new Date().toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-
-        await updateConversationTitle(convId, `${topDisease} — ${dateStr}`);
+        await updateConversationTitle(convId, topDisease);
 
         const finalMsg =
           `Initial Assessment:\n${initialPredictions}` +
@@ -169,7 +161,6 @@ export function useChatSession() {
         return;
       }
 
-      // Show assessment + first question text (questions[0].question)
       const initialMsg =
         `Initial Assessment:\n${initialPredictions}` +
         `\n\nI have a few follow-up questions. Answer Yes or No.\n\n` +
@@ -187,7 +178,7 @@ export function useChatSession() {
       return;
     }
 
-    // ── Stage: questions ───────────────────────────────────────────
+    // ── Stage: questions ──
     if (stage === "questions") {
       const answer = input.toLowerCase();
       if (!["yes", "no", "y", "n"].includes(answer)) {
@@ -202,7 +193,6 @@ export function useChatSession() {
       const nextQ = sessionData.currentQ + 1;
 
       if (nextQ < sessionData.questions.length) {
-        // Show the next question's text string only
         const nextQuestion = sessionData.questions[nextQ].question;
         setSessionData({
           ...sessionData,
@@ -215,7 +205,6 @@ export function useChatSession() {
         return;
       }
 
-      // All questions answered — call /chat/answer
       addMessage("assistant", "Processing your final assessment...");
 
       const res = await fetch(`${API}/chat/answer`, {
@@ -223,7 +212,7 @@ export function useChatSession() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           keywords: sessionData.keywords,
-          questions: sessionData.questions, // QuestionItem[] as expected by backend
+          questions: sessionData.questions,
           answers: updatedAnswers,
         }),
       });
@@ -231,18 +220,9 @@ export function useChatSession() {
 
       const topDisease = data.final_predictions?.[0]?.disease ?? "Unknown";
       const specialist: string = data.specialist ?? "";
-      const dateStr = new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
 
-      if (conversationId) {
-        await updateConversationTitle(
-          conversationId,
-          `${topDisease} — ${dateStr}`,
-        );
-      }
+      if (conversationId)
+        await updateConversationTitle(conversationId, topDisease);
 
       const finalPredictions = (data.final_predictions ?? [])
         .map(
@@ -263,15 +243,16 @@ export function useChatSession() {
       return;
     }
 
-    // ── Stage: done — reset for a new session ──────────────────────
-    if (stage === "done") {
-      setMessages([]);
-      setStage("start");
-      setStartedAt(null);
-      setConversationId(null);
-      setSessionData({ keywords: "", questions: [], answers: [], currentQ: 0 });
-    }
+    // ── Stage: done ──
+    if (stage === "done") resetSession();
   };
 
-  return { messages, stage, handleSend, formatHeaderName, formatHeaderDate };
+  return {
+    messages,
+    stage,
+    handleSend,
+    formatHeaderName: () =>
+      formatHeaderName(hasStarted, userName, conversationId),
+    formatHeaderDate: () => formatHeaderDate(startedAt),
+  };
 }

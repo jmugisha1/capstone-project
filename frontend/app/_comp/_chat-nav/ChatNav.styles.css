@@ -1,0 +1,111 @@
+/* DESKTOP NAVIGATION */
+.chat-nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 160px;
+  transition: width 0.3s ease;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  .chat-nav-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .chat-nav-main-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+
+  .chat-nav-account {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.chat-nav-collapsed {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: width 0.3s ease;
+
+  .chat-nav-main {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+/* MOBILE NAVIGATION FIXED */
+
+.chat-nav-mob-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: fit-content;
+  background-color: aqua;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+/* MOBILE DIALOG DRAWER */
+
+.chat-nav-mob {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--your-bg-color, #fff);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  .chat-nav-mob-main {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    .chat-nav-mob-main-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+
+  .chat-nav-mob-account {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.chat-nav-mob.open {
+  transform: translateX(0);
+}
