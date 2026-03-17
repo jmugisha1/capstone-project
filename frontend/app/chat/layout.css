@@ -2,15 +2,20 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  padding: 12px;
+  padding: var(--padding-size-03);
   display: flex;
   flex-direction: row;
-  gap: 12px;
-}
-
-.chat-wrapper .chat-content {
-  flex: 1;
-  height: 100%;
+  gap: var(--padding-size-03);
   overflow: hidden;
-  min-width: 0;
+
+  /* SCREENS BELOW OR EQUAL TO 768PX */
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  .chat-wrapper-main {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
 }

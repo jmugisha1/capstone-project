@@ -9,6 +9,7 @@ export default function SignUpPage() {
       <h1 className="text-size-02">create account</h1>
       <form className="auth-page-wrapper-forms" onSubmit={handleSubmit}>
         <input
+          style={{ textTransform: "lowercase" }}
           className="auth-page-wrapper-forms-input text-size-03"
           type="text"
           name="fullname"
@@ -16,6 +17,7 @@ export default function SignUpPage() {
           required
         />
         <input
+          style={{ textTransform: "lowercase" }}
           className="auth-page-wrapper-forms-input text-size-03"
           type="email"
           name="email"

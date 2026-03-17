@@ -5,6 +5,7 @@
   flex-direction: column;
 
   .auth-page-header {
+    padding: var(--padding-size-02);
   }
 
   .auth-page-wrapper {
@@ -17,6 +18,11 @@
     width: 100%;
     padding-left: clamp(1rem, -6.4333rem + 42.4762vw, 112.5rem);
     padding-right: clamp(1rem, -6.4333rem + 42.4762vw, 112.5rem);
+
+    .auth-page-wrapper-title {
+      display: flex;
+      flex-direction: column;
+    }
 
     .auth-page-wrapper-forms {
       display: flex;
@@ -45,5 +51,12 @@
         width: 100%;
       }
     }
+  }
+
+  .auth-page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-size-02);
   }
 }

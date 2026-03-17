@@ -56,7 +56,7 @@ export default function ChatLayout({
         onClose={() => setIsOpen(false)}
       />
 
-      <section className="chat-content">{children}</section>
+      <main className="chat-wrapper-main">{children}</main>
     </div>
   );
 }

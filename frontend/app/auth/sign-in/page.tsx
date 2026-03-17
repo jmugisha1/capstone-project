@@ -6,9 +6,10 @@ export default function SignInPage() {
 
   return (
     <>
-      <h1>welcome back</h1>
+      <h1 className="text-size-02">welcome back</h1>
       <form className="auth-page-wrapper-forms" onSubmit={handleSubmit}>
         <input
+          style={{ textTransform: "lowercase" }}
           className="auth-page-wrapper-forms-input text-size-03"
           type="email"
           name="email"
@@ -16,7 +17,7 @@ export default function SignInPage() {
           required
         />
         <input
-          className="auth-page-wrapper-forms-input .text-size-03"
+          className="auth-page-wrapper-forms-input text-size-03"
           type="password"
           name="password"
           placeholder="password"
