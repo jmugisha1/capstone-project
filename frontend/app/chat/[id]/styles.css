@@ -18,14 +18,34 @@
   }
 }
 
-.chat-report-info {
+.chat-report {
   display: flex;
   flex-direction: column;
   gap: 32px;
 
-  .chat-report-info-wrapper {
+  .chat-report-header {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 28px;
+
+    .chat-report-header-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+    }
+  }
+
+  .chat-report-divider {
+    border-top: 1px solid rgb(0, 0, 0, 0.75);
+    border-bottom: 1px solid rgb(0, 0, 0, 0.75);
+    padding: 16px 0;
+  }
+
+  .report-report-body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     gap: 16px;
   }
 }
@@ -35,6 +55,6 @@
   border-radius: 16px;
   cursor: pointer;
   color: white;
-  background-color: #168bff;
+  background-color: black;
   width: fit-content;
 }

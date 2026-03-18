@@ -1,6 +1,5 @@
 import Link from "next/link";
 import "./ChatNav.styles.css";
-import { useRef, useEffect } from "react";
 
 type ChatNavDeskProps = {
   firstName: string;

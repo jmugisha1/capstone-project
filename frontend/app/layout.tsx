@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-import "./globals.css";
+import "./layout.css";
 
 const Amulya = localFont({
   src: [
