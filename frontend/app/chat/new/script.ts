@@ -6,126 +6,78 @@ import {
   formatHeaderDate,
 } from "../../_comp/_chat-new-header/ChatNewHeader.script";
 
-// ─── Constants ────────────────────────────────────────────
 const API = "https://mkkarekezi-testing-capstone.hf.space/api";
 
-// ─── Types ────────────────────────────────────────────────
 export type QuestionItem = {
   disease: string;
   symptom: string;
   question: string;
 };
-
-export type Message = {
-  role: string;
-  content: string;
-};
-
+export type Message = { role: string; content: string };
 export type Stage = "start" | "questions" | "done";
 
-export type SessionData = {
-  keywords: string;
-  questions: QuestionItem[];
-  answers: string[];
-  currentQ: number;
-};
+const createConversation = async () =>
+  (await api.post("/chat/conversations/create/")).data;
+const saveConversation = async (id: number, data: object) =>
+  (await api.post(`/chat/conversations/${id}/save/`, data)).data;
+const getProfile = async () => (await api.get("/auth/profile/")).data;
 
-// ─── API ──────────────────────────────────────────────────
-const createConversation = async () => {
-  const res = await api.post("/chat/conversations/create/");
-  return res.data;
-};
-
-const sendMessage = async (
-  id: number,
-  content: string,
-  role: string = "user",
-) => {
-  const res = await api.post(`/chat/conversations/${id}/message/`, {
-    content,
-    role,
-  });
-  return res.data;
-};
-
-const updateConversationTitle = async (id: number, title: string) => {
-  const res = await api.post(`/chat/conversations/${id}/title/`, { title });
-  return res.data;
-};
-
-const getProfile = async () => {
-  const res = await api.get("/auth/profile/");
-  return res.data;
-};
-
-// ─── Hook ─────────────────────────────────────────────────
 export function useChatSession() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [stage, setStage] = useState<Stage>("start");
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [userName, setUserName] = useState("");
   const [startedAt, setStartedAt] = useState<string | null>(null);
-  const [sessionData, setSessionData] = useState<SessionData>({
+  const [sessionData, setSessionData] = useState({
     keywords: "",
-    questions: [],
-    answers: [],
+    questions: [] as QuestionItem[],
+    answers: [] as string[],
     currentQ: 0,
+    symptoms: "",
+    initialPredictions: [] as any[],
   });
 
   const hasStarted = messages.length > 0;
 
   useEffect(() => {
     getProfile()
-      .then((profile) => setUserName(profile.full_name))
-      .catch((err) => console.error("Failed to fetch profile", err));
+      .then((p) => setUserName(p.full_name))
+      .catch(console.error);
   }, []);
 
-  const addMessage = (role: "user" | "assistant", content: string) => {
+  const addMessage = (role: "user" | "assistant", content: string) =>
     setMessages((prev) => [...prev, { role, content }]);
-  };
-
-  const saveMessage = async (
-    id: number,
-    content: string,
-    role: string = "user",
-  ) => {
-    try {
-      await sendMessage(id, content, role);
-    } catch (err) {
-      console.error("Failed to save message", err);
-    }
-  };
 
   const resetSession = () => {
     setMessages([]);
     setStage("start");
     setStartedAt(null);
     setConversationId(null);
-    setSessionData({ keywords: "", questions: [], answers: [], currentQ: 0 });
+    setSessionData({
+      keywords: "",
+      questions: [],
+      answers: [],
+      currentQ: 0,
+      symptoms: "",
+      initialPredictions: [],
+    });
   };
 
   const handleSend = async (input: string) => {
     if (!input.trim()) return;
 
-    // ── Stage: start ──
     if (stage === "start") {
       setStartedAt(new Date().toISOString());
       addMessage("user", input);
 
       let convId = conversationId;
       if (!convId) {
-        try {
-          const conv = await createConversation();
-          convId = conv.id;
-          setConversationId(conv.id);
-        } catch (err) {
-          console.error("Failed to create conversation", err);
-          return;
-        }
+        const conv = await createConversation();
+        convId = conv.id;
+        setConversationId(conv.id);
       }
       if (!convId) return;
 
-      await saveMessage(convId, input, "user");
       addMessage("assistant", "Analyzing your symptoms...");
 
       const res = await fetch(`${API}/chat/start`, {
@@ -138,47 +90,46 @@ export function useChatSession() {
       const questions: QuestionItem[] = data.questions ?? [];
       const skipFollowup: boolean = data.skip_followup ?? false;
       const specialist: string = data.specialist ?? "";
-
-      const initialPredictions = (data.initial_predictions ?? [])
-        .map(
-          (p: { disease: string; confidence: number }, i: number) =>
-            `${i + 1}. ${p.disease} (${(p.confidence * 100).toFixed(1)}%)`,
-        )
-        .join("\n");
+      const initialPredictions = data.initial_predictions ?? [];
 
       if (skipFollowup || questions.length === 0) {
-        const topDisease = data.initial_predictions?.[0]?.disease ?? "Unknown";
-        await updateConversationTitle(convId, topDisease);
+        const topDisease = initialPredictions[0]?.disease ?? "Unknown";
+        await saveConversation(convId, {
+          title: topDisease,
+          symptoms: input,
+          initial_predictions: initialPredictions,
+          questions_answers: [],
+          final_predictions: initialPredictions,
+          specialist,
+        });
 
-        const finalMsg =
-          `Initial Assessment:\n${initialPredictions}` +
-          (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
-          `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`;
-
-        addMessage("assistant", finalMsg);
-        await saveMessage(convId, finalMsg, "assistant");
+        addMessage(
+          "assistant",
+          `Initial Assessment:\n${initialPredictions.map((p: any, i: number) => `${i + 1}. ${p.disease} (${(p.confidence * 100).toFixed(1)}%)`).join("\n")}` +
+            (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
+            `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`,
+        );
         setStage("done");
         return;
       }
-
-      const initialMsg =
-        `Initial Assessment:\n${initialPredictions}` +
-        `\n\nI have a few follow-up questions. Answer Yes or No.\n\n` +
-        questions[0].question;
 
       setSessionData({
         keywords: data.keywords,
         questions,
         answers: [],
         currentQ: 0,
+        symptoms: input,
+        initialPredictions,
       });
       setStage("questions");
-      addMessage("assistant", initialMsg);
-      await saveMessage(convId, initialMsg, "assistant");
+      addMessage(
+        "assistant",
+        `Initial Assessment:\n${initialPredictions.map((p: any, i: number) => `${i + 1}. ${p.disease} (${(p.confidence * 100).toFixed(1)}%)`).join("\n")}` +
+          `\n\nI have a few follow-up questions. Answer Yes or No.\n\n${questions[0].question}`,
+      );
       return;
     }
 
-    // ── Stage: questions ──
     if (stage === "questions") {
       const answer = input.toLowerCase();
       if (!["yes", "no", "y", "n"].includes(answer)) {
@@ -187,21 +138,16 @@ export function useChatSession() {
       }
 
       addMessage("user", input);
-      if (conversationId) await saveMessage(conversationId, input, "user");
-
       const updatedAnswers = [...sessionData.answers, answer];
       const nextQ = sessionData.currentQ + 1;
 
       if (nextQ < sessionData.questions.length) {
-        const nextQuestion = sessionData.questions[nextQ].question;
         setSessionData({
           ...sessionData,
           answers: updatedAnswers,
           currentQ: nextQ,
         });
-        addMessage("assistant", nextQuestion);
-        if (conversationId)
-          await saveMessage(conversationId, nextQuestion, "assistant");
+        addMessage("assistant", sessionData.questions[nextQ].question);
         return;
       }
 
@@ -218,32 +164,35 @@ export function useChatSession() {
       });
       const data = await res.json();
 
-      const topDisease = data.final_predictions?.[0]?.disease ?? "Unknown";
+      const finalPredictions = data.final_predictions ?? [];
       const specialist: string = data.specialist ?? "";
+      const topDisease = finalPredictions[0]?.disease ?? "Unknown";
+      const questionsAnswers = sessionData.questions.map((q, i) => ({
+        question: q.question,
+        answer: updatedAnswers[i],
+      }));
 
-      if (conversationId)
-        await updateConversationTitle(conversationId, topDisease);
+      if (conversationId) {
+        await saveConversation(conversationId, {
+          title: topDisease,
+          symptoms: sessionData.symptoms,
+          initial_predictions: sessionData.initialPredictions,
+          questions_answers: questionsAnswers,
+          final_predictions: finalPredictions,
+          specialist,
+        });
+      }
 
-      const finalPredictions = (data.final_predictions ?? [])
-        .map(
-          (p: { disease: string; confidence: number }, i: number) =>
-            `${i + 1}. ${p.disease} — ${(p.confidence * 100).toFixed(2)}% confidence`,
-        )
-        .join("\n");
-
-      const finalMsg =
-        `Final Assessment:\n${finalPredictions}` +
-        (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
-        `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`;
-
-      addMessage("assistant", finalMsg);
-      if (conversationId)
-        await saveMessage(conversationId, finalMsg, "assistant");
+      addMessage(
+        "assistant",
+        `Final Assessment:\n${finalPredictions.map((p: any, i: number) => `${i + 1}. ${p.disease} — ${(p.confidence * 100).toFixed(2)}% confidence`).join("\n")}` +
+          (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
+          `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`,
+      );
       setStage("done");
       return;
     }
 
-    // ── Stage: done ──
     if (stage === "done") resetSession();
   };
 

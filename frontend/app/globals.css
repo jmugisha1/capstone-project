@@ -79,11 +79,18 @@ body {
     hue-rotate(185deg) brightness(101%) contrast(93%);
 }
 
+.icon-size-02 {
+  height: clamp(1.5rem, 1.4333rem + 0.381vw, 2.5rem) !important;
+  width: clamp(1.5rem, 1.4333rem + 0.381vw, 2.5rem) !important;
+  filter: brightness(0) saturate(100%) invert(6%) sepia(8%) saturate(5035%)
+    hue-rotate(185deg) brightness(101%) contrast(93%);
+}
+
 /* FLEX CONTAINDER  */
 
 .chat-main-inner {
-  padding-left: clamp(0.5rem, -3.4667rem + 22.6667vw, 60rem);
-  padding-right: clamp(0.5rem, -3.4667rem + 22.6667vw, 60rem);
+  padding-left: var(--padding-size-01);
+  padding-right: var(--padding-size-01);
   padding-bottom: 32px;
   padding-top: 32px;
   gap: 40px;
@@ -129,6 +136,7 @@ body {
   --color-green-02: #0e8e6f;
 
   /* PADDING */
+  --padding-size-01: clamp(0.5rem, -3.4667rem + 22.6667vw, 60rem);
 
   /* PADDING HEADERS FOOTER */
   --padding-size-02: clamp(0.5rem, 0.35rem + 0.8571vw, 2.75rem);

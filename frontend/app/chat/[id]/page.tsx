@@ -3,82 +3,64 @@ import { useConversationDetail } from "./script";
 import "./styles.css";
 
 export default function ConversationPage() {
-  const {
-    title,
-    userName,
-    loading,
-    getInitialAssessment,
-    getFinalAssessment,
-    getQuestionsAndAnswers,
-    formatDate,
-  } = useConversationDetail();
+  const { convo, userName, loading, formatDate } = useConversationDetail();
 
-  const qaPairs = getQuestionsAndAnswers();
-  const initialAssessment = getInitialAssessment();
-  const finalAssessment = getFinalAssessment();
+  if (loading)
+    return (
+      <div className="chat-main-outer chat-main-inner">
+        <div className="chat-loading">
+          <img
+            src="/icons/loader.svg"
+            alt=""
+            className="chat-loading-icon icon-size-01"
+          />
+          <span>loading</span>
+        </div>
+      </div>
+    );
 
   return (
     <div
       className="chat-main-outer chat-main-inner"
       style={{ justifyContent: "space-between" }}
     >
-      <h1 className="text-size-02">{title || "Loading..."}</h1>
+      <div className="report-header">
+        <h1 className="text-size-02">{convo?.title}</h1>
+        <h3 className="chat-report-info-wrapper">
+          <img src="/icons/text-aa.svg" alt="" />
+          <span>{userName}</span>
+        </h3>
+        <h3 className="chat-report-info-wrapper">
+          <img src="/icons/calendar-minus.svg" alt="" />
+          <span>{formatDate()}</span>
+        </h3>
+      </div>
 
-      {loading ? (
-        <div className="chat-report-spinner">
-          <div className="spinner" />
-        </div>
-      ) : (
-        <>
-          <div className="chat-report-info">
-            <h3 className="chat-report-info-wrapper">
-              <img src="/icons/text-aa.svg" alt="" />
-              <span>{userName}</span>
-            </h3>
-            <h3 className="chat-report-info-wrapper">
-              <img src="/icons/calendar-minus.svg" alt="" />
-              <span>{formatDate()}</span>
-            </h3>
-          </div>
+      <pre className="report-body">
+        {[
+          convo?.symptoms,
+          convo?.initial_predictions
+            ?.map(
+              (p: any, i: number) =>
+                `${i + 1}. ${p.disease} (${(p.confidence * 100).toFixed(1)}%)`,
+            )
+            .join("\n"),
+          convo?.questions_answers
+            ?.map((qa: any) => `${qa.question} — ${qa.answer}`)
+            .join("\n"),
+          convo?.final_predictions
+            ?.map(
+              (p: any, i: number) =>
+                `${i + 1}. ${p.disease} — ${(p.confidence * 100).toFixed(2)}%`,
+            )
+            .join("\n"),
+          convo?.specialist && `Recommended specialist: ${convo.specialist}`,
+        ]
+          .filter(Boolean)
+          .join("\n\n")}
+      </pre>
 
-          {initialAssessment && (
-            <>
-              <section className="report-section">
-                <h2 className="report-section-title">Initial Assessment</h2>
-                <pre className="report-section-content">
-                  {initialAssessment}
-                </pre>
-              </section>
-              <div className="report-divider" />
-            </>
-          )}
-
-          {qaPairs.length > 0 && (
-            <>
-              <section className="report-section">
-                <h2 className="report-section-title">Follow-up Questions</h2>
-                <div className="report-qa">
-                  {qaPairs.map((qa, i) => (
-                    <p key={i} className="report-qa-item">
-                      {qa.question} — <strong>{qa.answer}</strong>
-                    </p>
-                  ))}
-                </div>
-              </section>
-              <div className="report-divider" />
-            </>
-          )}
-
-          {finalAssessment && (
-            <section className="report-section report-final">
-              <h2 className="report-section-title">Final Assessment</h2>
-              <pre className="report-section-content">{finalAssessment}</pre>
-            </section>
-          )}
-
-          <button className="chat-report-download">download report</button>
-        </>
-      )}
+      <button className="chat-report-download">download report</button>
     </div>
   );
 }

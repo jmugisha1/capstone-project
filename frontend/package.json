@@ -9,6 +9,8 @@
     "build": "next build"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.10",
+    "@heroui/spinner": "^2.2.29",
     "axios": "^1.13.6",
     "next": "16.1.6",
     "react": "19.2.3",
