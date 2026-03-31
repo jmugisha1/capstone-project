@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// const BASE_URL =
-//   process.env.NEXT_PUBLIC_API_URL ||
-//   "https://capstone-project-f5nm.onrender.com/api";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://capstone-project-f5nm.onrender.com/api";
 
-const BASE_URL = "http://127.0.0.1:8000/api";
+// const BASE_URL = "http://127.0.0.1:8000/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
