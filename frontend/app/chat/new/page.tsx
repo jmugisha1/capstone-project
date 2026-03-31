@@ -34,7 +34,9 @@ export default function NewChat() {
         {!hasMessages ? (
           <h1 className="text-size-02">hello, how are you feeling today?</h1>
         ) : (
-          <ChatNewMessages messages={messages} ref={messagesRef} />
+          <div ref={messagesRef} className="chat-new-messages-scroll">
+            <ChatNewMessages messages={messages} />
+          </div>
         )}
         <ChatNewInput
           stage={stage}
@@ -42,10 +44,6 @@ export default function NewChat() {
           setText={setText}
           onSubmit={handleSubmit}
         />
-
-        {!hasMessages && (
-          <section className="chat-new-agents">agent here//</section>
-        )}
       </main>
     </div>
   );

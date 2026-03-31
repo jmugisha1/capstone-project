@@ -2,7 +2,7 @@
 import { useSignUp } from "./script";
 
 export default function SignUpPage() {
-  const { handleSubmit } = useSignUp();
+  const { handleSubmit, error, passwordErrors, loading } = useSignUp();
 
   return (
     <>
@@ -38,8 +38,27 @@ export default function SignUpPage() {
           placeholder="repeat password"
           required
         />
-        <button type="submit" className="auth-page-wrapper-forms-submit">
-          <span className="text-size-03">create account</span>
+        {/*  */}
+        {passwordErrors.length === 0 && (
+          <p className="text-size-05">
+            min 12 chars, uppercase, lowercase, number & special character
+          </p>
+        )}
+        {error && <p className="auth-error">{error}</p>}
+        {passwordErrors.length > 0 && (
+          <p className="auth-error">
+            password needs: {passwordErrors.join(", ")}
+          </p>
+        )}
+        {/*  */}
+        <button
+          type="submit"
+          className="auth-page-wrapper-forms-submit"
+          disabled={loading}
+        >
+          <span className="text-size-03">
+            {loading ? "creating..." : "create account"}
+          </span>
         </button>
       </form>
     </>

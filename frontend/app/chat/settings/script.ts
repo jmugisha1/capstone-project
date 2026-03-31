@@ -10,26 +10,20 @@ export const getProfile = async () => {
 
 export function useSettings() {
   const router = useRouter();
-  const [isDark, setIsDark] = useState(false);
   const [profile, setProfile] = useState({ full_name: "", email: "" });
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") setIsDark(true);
+    const cached = localStorage.getItem("profile");
+    if (cached) setProfile(JSON.parse(cached));
 
     getProfile()
-      .then((data) =>
-        setProfile({ full_name: data.full_name, email: data.email }),
-      )
+      .then((data) => {
+        const p = { full_name: data.full_name, email: data.email };
+        setProfile(p);
+        localStorage.setItem("profile", JSON.stringify(p));
+      })
       .catch((err) => console.error("Failed to fetch profile", err));
   }, []);
-
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-    window.dispatchEvent(new Event("theme-change"));
-  };
 
   const handleLogout = async () => {
     try {
@@ -42,11 +36,10 @@ export function useSettings() {
     } finally {
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
-      localStorage.removeItem("theme");
-      window.dispatchEvent(new Event("theme-change"));
+      localStorage.removeItem("profile");
       router.push("/auth/sign-in");
     }
   };
 
-  return { isDark, profile, toggleTheme, handleLogout };
+  return { profile, handleLogout };
 }

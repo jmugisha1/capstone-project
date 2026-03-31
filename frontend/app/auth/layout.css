@@ -6,6 +6,10 @@
 
   .auth-page-header {
     padding: var(--padding-size-02);
+
+    .auth-page-header-link {
+      cursor: pointer;
+    }
   }
 
   .auth-page-wrapper {
@@ -40,6 +44,16 @@
 
       .chat-new-input-place::placeholder {
         color: var(--color-gray-03);
+      }
+
+      .auth-error {
+        background: #e91429;
+        color: white;
+        padding: 6px;
+        text-align: center;
+        border-radius: 100px;
+        font-size: 8px;
+        font-family: var(--font-amulya);
       }
 
       .auth-page-wrapper-forms-submit {

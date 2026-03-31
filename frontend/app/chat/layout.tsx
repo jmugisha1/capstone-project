@@ -14,48 +14,39 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   const [firstName, setFirstName] = useState("");
-  const [theme, setTheme] = useState("light");
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) setTheme(saved);
-
-    const handleThemeChange = () => {
-      const updated = localStorage.getItem("theme");
-      if (updated) setTheme(updated);
-    };
-
-    window.addEventListener("theme-change", handleThemeChange);
+    const cached = localStorage.getItem("profile");
+    if (cached) setFirstName(JSON.parse(cached).full_name.split(" ")[0]);
 
     api
       .get("/auth/profile/")
-      .then((res) => setFirstName(res.data.full_name.split(" ")[0]))
+      .then((res) => {
+        const name = res.data.full_name;
+        setFirstName(name.split(" ")[0]);
+        localStorage.setItem(
+          "profile",
+          JSON.stringify({ full_name: name, email: res.data.email }),
+        );
+      })
       .catch((err) => console.error("Failed to fetch profile", err));
-
-    return () => window.removeEventListener("theme-change", handleThemeChange);
   }, []);
 
   return (
     <div className="chat-wrapper">
-      {/* Desktop sidebar */}
       <ChatNavDesk
         firstName={firstName}
         isCollapsed={isCollapsed}
         onToggle={() => setIsCollapsed(!isCollapsed)}
       />
-
-      {/* Mobile top bar — "cura-medica" + sidebar icon */}
       <ChatNavMobBar onOpen={() => setIsOpen(true)} />
-
-      {/* Mobile slide-out drawer */}
       <ChatNavMob
         firstName={firstName}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
-
       <main className="chat-wrapper-main">{children}</main>
     </div>
   );

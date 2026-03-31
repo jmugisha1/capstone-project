@@ -44,25 +44,22 @@ export function useConversationDetail() {
 
     const element = reportRef.current;
 
-    // Save original styles
     const originalHeight = element.style.height;
     const originalOverflow = element.style.overflow;
 
-    // Expand to full content height before capture
-    element.style.height = element.scrollHeight + "px";
+    element.style.height = "auto";
     element.style.overflow = "visible";
+
+    await new Promise((r) => setTimeout(r, 100));
 
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
-      scrollY: 0,
-      width: element.scrollWidth,
-      height: element.scrollHeight,
+      scrollY: -window.scrollY,
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
     });
 
-    // Restore original styles
     element.style.height = originalHeight;
     element.style.overflow = originalOverflow;
 
@@ -73,22 +70,23 @@ export function useConversationDetail() {
       format: "a4",
     });
 
+    const padding = 20;
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth;
+    const imgWidth = pageWidth - padding * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
     let heightLeft = imgHeight;
-    let position = 0;
+    let position = padding;
 
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+    pdf.addImage(imgData, "PNG", padding, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight - padding * 2;
 
     while (heightLeft > 0) {
-      position -= pageHeight;
+      position -= pageHeight - padding * 2;
       pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      pdf.addImage(imgData, "PNG", padding, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight - padding * 2;
     }
 
     pdf.save(`${convo?.title ?? "report"} - ${userName}.pdf`);
@@ -96,5 +94,3 @@ export function useConversationDetail() {
 
   return { convo, userName, loading, formatDate, reportRef, downloadPDF };
 }
-
-// ehhe

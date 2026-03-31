@@ -13,8 +13,17 @@
   .chat-new-main--active {
     justify-content: flex-end;
   }
+}
 
-  .chat-new-agents {
-    background-color: yellowgreen;
-  }
+.chat-new-messages-scroll {
+  flex: 1;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.chat-new-messages-scroll::-webkit-scrollbar {
+  display: none;
 }

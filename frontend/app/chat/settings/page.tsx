@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useSettings } from "./script";
 import "./styles.css";
 
@@ -32,6 +33,10 @@ export default function ChatSettings() {
           <span className="text-size-03" style={{ textTransform: "lowercase" }}>
             {profile.email || "..."}
           </span>
+        </div>
+
+        <div className="chat-settings-main-wrapper">
+          <Link href="/terms-of-use">terms of use</Link>
         </div>
 
         <button className="chat-settings-main-cta" onClick={handleLogout}>

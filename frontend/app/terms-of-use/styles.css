@@ -1,0 +1,76 @@
+.terms-of-use {
+  /* padding-left: var(--padding-size-01); */
+  /* padding-right: var(--padding-size-01); */
+  padding-top: 48px;
+  padding-bottom: 48px;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.terms-of-use h1 {
+  font-size: clamp(1.42375rem, 1.2145rem + 1.1955vw, 4.561875rem);
+  font-weight: 350;
+  font-family: var(--font-literate);
+  line-height: 1.1;
+  color: #0d0d0d;
+}
+
+.terms-of-use .subtitle {
+  font-size: clamp(0.875rem, 0.8373rem + 0.2152vw, 1.44rem);
+  color: var(--color-gray-03);
+  font-weight: 300;
+  font-family: var(--font-amulya);
+}
+
+.terms-of-use .section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.terms-of-use .section h2 {
+  font-size: clamp(0.88875rem, 0.8279rem + 0.3479vw, 1.801875rem);
+  font-weight: 425;
+  font-family: var(--font-amulya);
+  color: #0d0d0d;
+}
+
+.terms-of-use .section p {
+  font-size: clamp(0.875rem, 0.8373rem + 0.2152vw, 1.44rem);
+  color: var(--color-gray-03);
+  font-weight: 300;
+  font-family: var(--font-amulya);
+  line-height: 1.7;
+}
+
+.terms-of-use hr {
+  border: none;
+  border-top: 0.55px solid rgb(0, 0, 0, 0.15);
+  width: 100%;
+}
+
+.terms-of-use .contact {
+  padding-top: 8px;
+}
+
+.terms-of-use .contact p {
+  font-size: clamp(0.875rem, 0.8373rem + 0.2152vw, 1.44rem);
+  color: var(--color-gray-03);
+  font-weight: 300;
+  font-family: var(--font-amulya);
+}
+
+.terms-of-use .contact a {
+  color: var(--color-green-01);
+  cursor: pointer;
+  transition: color var(--duration-02) var(--ease-01);
+}
+
+.terms-of-use .contact a:hover {
+  color: var(--color-green-02);
+}

@@ -84,7 +84,7 @@ export default function ConversationPage() {
         className="chat-report-download text-size-03"
         onClick={downloadPDF}
       >
-        downloaf report
+        download report
       </button>
     </div>
   );

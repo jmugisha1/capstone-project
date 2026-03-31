@@ -97,7 +97,6 @@ body {
 }
 
 .chat-main-outer {
-  border-radius: 8px;
   border: 0.55px solid rgb(0, 0, 0, 0.15);
   height: 100%;
   width: 100%;

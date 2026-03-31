@@ -2,10 +2,8 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  padding: var(--padding-size-03);
   display: flex;
   flex-direction: row;
-  gap: var(--padding-size-03);
   overflow: hidden;
 
   /* SCREENS BELOW OR EQUAL TO 768PX */

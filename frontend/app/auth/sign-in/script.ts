@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../../_config/api";
 
@@ -9,9 +10,13 @@ const loginPatient = async (data: { email: string; password: string }) => {
 
 export function useSignIn() {
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
 
     try {
@@ -23,10 +28,17 @@ export function useSignIn() {
       localStorage.setItem("refresh", res.refresh);
       router.push("/chat/new");
     } catch (error: any) {
-      console.error(error.response?.data);
-      alert(error.response?.data?.detail || "Login failed");
+      const status = error.response?.status;
+      if (status === 401 || status === 400 || status === 404) {
+        setError("incorrect email or password. please try again.");
+      } else {
+        setError("something went wrong. please try again later.");
+      }
+      console.log("error state set");
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { handleSubmit };
+  return { handleSubmit, error, loading };
 }

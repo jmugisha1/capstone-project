@@ -2,11 +2,12 @@
 import { useSignIn } from "./script";
 
 export default function SignInPage() {
-  const { handleSubmit } = useSignIn();
+  const { handleSubmit, error, loading } = useSignIn();
 
   return (
     <>
       <h1 className="text-size-02">welcome back</h1>
+
       <form className="auth-page-wrapper-forms" onSubmit={handleSubmit}>
         <input
           style={{ textTransform: "lowercase" }}
@@ -23,8 +24,15 @@ export default function SignInPage() {
           placeholder="password"
           required
         />
-        <button type="submit" className="auth-page-wrapper-forms-submit">
-          <span className="text-size-03">sign in</span>
+        {error && <p className="auth-error ">{error}</p>}
+        <button
+          type="submit"
+          className="auth-page-wrapper-forms-submit"
+          disabled={loading}
+        >
+          <span className="text-size-03">
+            {loading ? "signing in..." : "sign in"}
+          </span>
         </button>
       </form>
     </>

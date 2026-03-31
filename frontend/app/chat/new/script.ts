@@ -1,12 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import api from "../../_config/api";
 import {
   formatHeaderName,
   formatHeaderDate,
 } from "../../_comp/_chat-new-header/ChatNewHeader.script";
 
-const API = "https://mkkarekezi-testing-capstone.hf.space/api";
+// const API = "https://mkkarekezi-testing-capstone.hf.space/api";
+const API = "https://mkkarekezi-final-capstone-model.hf.space/api";
 
 export type QuestionItem = {
   disease: string;
@@ -23,6 +25,7 @@ const saveConversation = async (id: number, data: object) =>
 const getProfile = async () => (await api.get("/auth/profile/")).data;
 
 export function useChatSession() {
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [stage, setStage] = useState<Stage>("start");
   const [conversationId, setConversationId] = useState<number | null>(null);
@@ -40,8 +43,17 @@ export function useChatSession() {
   const hasStarted = messages.length > 0;
 
   useEffect(() => {
+    const cached = localStorage.getItem("profile");
+    if (cached) setUserName(JSON.parse(cached).full_name);
+
     getProfile()
-      .then((p) => setUserName(p.full_name))
+      .then((p) => {
+        setUserName(p.full_name);
+        localStorage.setItem(
+          "profile",
+          JSON.stringify({ full_name: p.full_name, email: p.email }),
+        );
+      })
       .catch(console.error);
   }, []);
 
@@ -106,10 +118,10 @@ export function useChatSession() {
         addMessage(
           "assistant",
           `Initial Assessment:\n${initialPredictions.map((p: any, i: number) => `${i + 1}. ${p.disease} (${(p.confidence * 100).toFixed(1)}%)`).join("\n")}` +
-            (specialist ? `\n\nRecommended specialist: ${specialist}` : "") +
-            `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`,
+            (specialist ? `\n\nRecommended specialist: ${specialist}` : ""),
         );
         setStage("done");
+        setTimeout(() => router.push(`/chat/${convId}`), 3000);
         return;
       }
 
@@ -190,6 +202,7 @@ export function useChatSession() {
           `\n\nThis is not a medical diagnosis. Please consult a qualified healthcare professional.`,
       );
       setStage("done");
+      setTimeout(() => router.push(`/chat/${conversationId}`), 3000);
       return;
     }
 
