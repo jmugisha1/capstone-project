@@ -16,7 +16,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "capstone-project-f5nm.onrender.com",
-    "https://capstone-project-final-final.vercel.app"
+    "capstone-project-final-final.vercel.app"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
