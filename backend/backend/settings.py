@@ -16,12 +16,14 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "capstone-project-f5nm.onrender.com",
+    "https://capstone-project-final-final.vercel.app"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://capstone-project-f5nm.onrender.com",
+    "https://capstone-project-final-final.vercel.app"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
